@@ -1,0 +1,678 @@
+/* frontend/geo-ads-frontend/src/App.css */
+
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  line-height: 1.5;
+  color: #0f172a;
+  background-color: #0b1120;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #020617;
+}
+
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #e5e7eb;
+}
+
+.app-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #1f2937;
+  background: radial-gradient(circle at top left, #0f172a, #020617 60%);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.app-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 16px;
+  padding: 16px 24px;
+}
+
+.zones-sidebar {
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  padding: 16px;
+}
+
+.zones-sidebar h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.zones-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zone-button {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.zone-button:hover {
+  border-color: #22c55e;
+}
+
+.zone-button-active {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.zone-preview {
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.zone-description {
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+.zone-layout-title {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  margin-bottom: 8px;
+}
+
+.stadium-layout-grid {
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+  background: radial-gradient(circle at center, #020617, #020617);
+}
+
+/* =========================================================
+   ΠΛΑΚΙΔΙΑ ΟΘΟΝΩΝ + ΕΙΚΟΝΑ ΔΙΑΦΗΜΙΣΗΣ
+   ========================================================= */
+
+.screen-tile {
+  position: relative;
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4px;
+  text-align: left;
+  font-size: 0.85rem;
+
+  border: 1px solid #1f2937;
+  background: #050814;
+  cursor: pointer;
+
+  /* πολύ σημαντικό: σταθερή αναλογία για να μην τεντώνει */
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+/* Χρώματα ανά ζώνη (border/background) */
+.screen-tile.zone-glassfloor {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.screen-tile.zone-surrounding {
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.08);
+}
+
+.screen-tile.zone-megatron {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.08);
+}
+
+/* Εικόνα της διαφήμισης: γεμίζει ΟΛΟ το πλακίδιο */
+.screen-img {
+  position: absolute;
+  inset: 0;          /* top/right/bottom/left: 0 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* γεμίζει χωρίς να παραμορφώνεται */
+  filter: brightness(0.85);
+}
+
+/* Κείμενο πάνω από την εικόνα */
+.screen-meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.screen-ad-name {
+  font-weight: 500;
+}
+
+.screen-pos {
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+/* Fallback εμφάνιση όταν ΔΕΝ υπάρχει ad */
+.screen-id {
+  position: relative;
+  z-index: 1;
+  font-weight: 600;
+}
+
+/* Επιλογή / hover */
+.screen-tile-selectable {
+  cursor: pointer;
+}
+
+.screen-tile-selected {
+  outline: 3px solid #ffcc33;
+  box-shadow: 0 0 12px rgba(255, 204, 51, 0.7);
+}
+
+.screen-tile-mosaic {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Wrapper για mosaic εικόνες (μωσαϊκό) */
+.mosaic-img-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Όταν η ίδια εικόνα παίζει σαν mosaic */
+.screen-img.mosaic-img {
+  object-fit: cover;
+}
+
+/* =========================================================
+   Mosaic controls & buttons
+   ========================================================= */
+
+.mosaic-controls {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mosaic-mode-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mosaic-mode-btn {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #f5f5f5;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.mosaic-mode-btn.active {
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
+.mosaic-ad-picker {
+  margin-top: 0.25rem;
+}
+
+.mosaic-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 0.25rem;
+}
+
+.ad-picker-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ad-picker-btn {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #f5f5f5;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.ad-picker-btn-active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.mosaic-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mosaic-apply-btn,
+.mosaic-clear-btn {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.mosaic-apply-btn {
+  background: #22c55e;
+  color: #04111f;
+}
+
+.mosaic-clear-btn {
+  background: #6b7280;
+  color: #f5f5f5;
+}
+
+.mosaic-clear-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* =========================================================
+   Πλήκτρα διαφημίσεων (πάνω από το grid)
+   ========================================================= */
+
+.ads-picker {
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.ads-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ad-button {
+  background: #151a2a;
+  border: 1px solid #444c66;
+  color: #e0e6ff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ad-button:hover {
+  border-color: #8b9dff;
+}
+
+.ad-button-active {
+  background: #3040ff;
+  border-color: #3040ff;
+}
+
+/* κείμενο οδηγίας */
+.zone-layout-hint {
+  font-size: 0.8rem;
+  color: #9aa6ff;
+}
+
+/* mosaic image (επιπλέον ασφάλεια) */
+.mosaic-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
+
+/* =========================================================
+   Panel assignment (αν θες να το χρησιμοποιήσεις αργότερα)
+   ========================================================= */
+
+.assign-panel {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #050814;
+  border: 1px solid #283044;
+}
+
+.assign-panel h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.assign-panel-controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.assign-panel select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #3f4b63;
+  background: #020515;
+  color: #ffffff;
+}
+
+.assign-panel button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #ff5252;
+  background: transparent;
+  color: #ff5252;
+  cursor: pointer;
+}
+
+/* =========================================================
+   Hint text + Ad picker panel (κάτω από το grid)
+   ========================================================= */
+
+.hint-text {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #9ca8ff;
+}
+
+/* Panel επιλογής διαφήμισης */
+.ad-picker {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: #111526;
+  border: 1px solid #2b3250;
+}
+
+.ad-picker-screen-id {
+  font-family: monospace;
+  background: #222844;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.ad-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.ad-picker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #2b3250;
+  background: #0c1020;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.ad-picker-item:hover {
+  border-color: #4c8dff;
+  transform: translateY(-1px);
+}
+
+/* thumbnails διαφημίσεων στο panel */
+.ad-picker-thumb {
+  width: 100%;
+  max-height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.ad-picker-name {
+  font-size: 0.8rem;
+  text-align: center;
+  color: #e5e9ff;
+}
+
+.ad-picker-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.ad-picker-clear,
+.ad-picker-cancel {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.ad-picker-clear {
+  background: #442222;
+  color: #ffdddd;
+}
+
+.ad-picker-cancel {
+  background: #222844;
+  color: #dde5ff;
+}
+
+/* =========================================================
+   Misc
+   ========================================================= */
+
+.error-text {
+  color: #f97373;
+  font-size: 0.9rem;
+}
+
+.zone-actions {
+  margin-top: 16px;
+  font-size: 0.9rem;
+}
+
+.zone-actions-title {
+  color: #9ca3af;
+  margin-bottom: 6px;
+}
+
+.zone-actions ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #d1d5db;
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.selection-mode-toggle {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.selection-mode-label {
+  font-size: 0.85rem;
+  color: #cbd5f5;
+}
+
+.selection-mode-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #4b5563;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.selection-mode-btn-active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+
+.screen-tile-recommended {
+  outline: 3px solid #ff9800;
+  box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+}
+
+.recommendation-panel {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.recommendation-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+
+.recommendation-grid input {
+  margin-top: 4px;
+}
+
+.recommendation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.recommendation-ad-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recommendation-result {
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+
+
+.screen-tile-recommended {
+  outline: 3px solid #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.7);
+}
+
+.recommendation-panel,
+.near-panel,
+.multiindex-panel {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.recommendation-grid,
+.near-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+
+.recommendation-grid label,
+.near-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+}
+
+.recommendation-grid input,
+.near-grid input,
+.recommendation-grid select {
+  margin-top: 4px;
+}
+
+.recommendation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.recommendation-ad-select,
+.recommendation-ws-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recommendation-result {
+  font-size: 0.85rem;
+}
+
+.multiindex-panel .mi-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.small-text {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
