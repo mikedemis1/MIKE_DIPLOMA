@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: geo_ads_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: geo_ads_user
+      POSTGRES_PASSWORD: geo_ads_password
+      POSTGRES_DB: geo_ads
+    ports:
+      - "5432:5432"
+    volumes:
+      - geo_ads_db_data:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  geo_ads_db_data:

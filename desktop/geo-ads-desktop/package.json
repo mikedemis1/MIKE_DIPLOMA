@@ -1,0 +1,16 @@
+{
+  "name": "geo-ads-desktop",
+  "version": "0.1.0",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "backend": "cd ../backend && uvicorn app.main:app --reload",
+    "frontend": "cd ../frontend/geo-ads-frontend && npm start",
+    "desktop": "electron .",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run desktop\""
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "concurrently": "^9.0.0"
+  }
+}
