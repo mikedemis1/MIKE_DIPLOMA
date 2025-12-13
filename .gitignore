@@ -22,3 +22,17 @@ Thumbs.db
 # Docker
 docker-data/
 *.log
+
+
+# React/Electron build outputs
+build/
+**/build/
+dist/
+out/
+
+# Python tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage/
+
