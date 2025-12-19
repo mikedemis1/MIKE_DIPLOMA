@@ -25,6 +25,12 @@ from app.services.placement_service import PlacementService
 app = FastAPI(title="Geo-Ads Backend")
 
 
+@app.api_route("/health", methods=["GET", "HEAD"])
+def health():
+    return {"status": "ok"}
+
+
+
 @app.get("/debug/ws_routes")
 def debug_ws_routes():
     return [

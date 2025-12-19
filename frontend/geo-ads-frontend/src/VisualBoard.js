@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 /** Βάση URL του backend (εκεί τρέχει ο FastAPI) */
-const BACKEND_BASE_URL = "http://127.0.0.1:8000";
-
+const BACKEND_BASE_URL =
+  process.env.REACT_APP_BACKEND_BASE_URL || "http://127.0.0.1:8000";
+const WS_BASE_URL = BACKEND_BASE_URL.replace(/^http/, "ws");
 /**
  * Τοπικός χάρτης: όνομα διαφήμισης -> URL εικόνας στο backend/static.
  * Χρησιμοποιούμε ΠΛΗΡΕΣ URL για να δουλεύει σωστά μέσα στο Electron.
@@ -24,22 +25,23 @@ const AD_IMAGE_MAP = {
 function resolveAdImageUrl(ad) {
   if (!ad) return null;
 
-  if (AD_IMAGE_MAP[ad.name]) {
-    return AD_IMAGE_MAP[ad.name];
-  }
-
+  // 1) Source of truth: DB image_url
   if (ad.image_url) {
-    if (
-      ad.image_url.startsWith("http://") ||
-      ad.image_url.startsWith("https://")
-    ) {
+    if (ad.image_url.startsWith("http://") || ad.image_url.startsWith("https://")) {
       return ad.image_url;
     }
     return `${BACKEND_BASE_URL}${ad.image_url}`;
   }
 
+  // 2) Fallback: hardcoded map (μόνο αν λείπει image_url)
+  if (AD_IMAGE_MAP[ad.name]) {
+    return AD_IMAGE_MAP[ad.name];
+  }
+
   return null;
 }
+
+
 
 /**
  * Υπολογίζει το CSS για κάθε tile του mosaic.
@@ -142,6 +144,7 @@ function VisualBoard() {
   const [multiIndexKeys, setMultiIndexKeys] = useState([]);
   const [miLoading, setMiLoading] = useState(false);
   const [miError, setMiError] = useState(null);
+  
 
   // =====================
   //  Φόρτωση LAYOUT
@@ -208,7 +211,8 @@ function VisualBoard() {
   //  WebSocket για /ws/ads (status)
   // =====================
   useEffect(() => {
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws/ads");
+    const ws = new WebSocket(`${WS_BASE_URL}/ws/ads`);
+
 
     ws.onopen = () => {
       setWsStatus("connected");
@@ -245,7 +249,8 @@ function VisualBoard() {
       return;
     }
 
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws/recommendation");
+    const ws = new WebSocket(`${WS_BASE_URL}/ws/recommendation`);
+
     let timerId = null;
 
     ws.onopen = () => {
